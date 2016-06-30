@@ -30,10 +30,14 @@ class Post < Sequel::Model
   set_schema do
     primary_key :id
     String :name
+    Integer :postable_id
+    String :postable_type
   end
 
   one_to_many :assets, :as => :attachable
   many_to_many :tags, :through => :taggings, :as => :taggable
+
+  many_to_one :postable, polymorphic: true
 end
 
 
@@ -54,6 +58,12 @@ class Tag < Sequel::Model
   end
 end
 
+class Question < Sequel::Model
+  set_schema do
+    primary_key :id
+  end
 
+  one_to_one :post, as: :postable
+end
 
-[Asset, Post, Note, Tag, Tagging].each {|klass| klass.create_table!}
+[Asset, Post, Note, Tag, Tagging, Question].each {|klass| klass.create_table!}

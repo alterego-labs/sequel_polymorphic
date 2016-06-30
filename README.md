@@ -21,6 +21,16 @@ end
 
 class Post < Sequel::Model
   one_to_many :assets, :as => :attachable
+
+  many_to_one :postable, polymorphic: true
+end
+
+class Article < Sequel::Model
+  one_to_one :post, as: :postable
+end
+
+class Question < Sequel::Model
+  one_to_one :post, as: :postable
 end
 ```
 
