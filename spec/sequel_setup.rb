@@ -38,6 +38,8 @@ class Post < Sequel::Model
   many_to_many :tags, :through => :taggings, :as => :taggable
 
   many_to_one :postable, polymorphic: true
+
+  one_to_one :picture, class: '::Media', as: :mediable
 end
 
 
@@ -66,4 +68,14 @@ class Question < Sequel::Model
   one_to_one :post, as: :postable
 end
 
-[Asset, Post, Note, Tag, Tagging, Question].each {|klass| klass.create_table!}
+class Media < Sequel::Model
+  set_schema do
+    primary_key :id
+    String :mediable_type
+    Integer :mediable_id
+  end
+
+  many_to_one :mediable, polymorphic: true
+end
+
+[Asset, Post, Note, Tag, Tagging, Question, Media].each {|klass| klass.create_table!}
